@@ -1,48 +1,70 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { ShoppingCart, Package, CheckCircle, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { ShoppingCart, Package, CheckCircle, Trash2, LogOut } from 'lucide-react';
+import Login from './Login'; // Import halaman Login yang baru dibuat
 
 function App() {
-  const [products, setProducts] = useState([])
-  const [cart, setCart] = useState([])
+  const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  
+  // State untuk menyimpan token login
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/products')
-      setProducts(response.data)
+      const response = await axios.get('http://localhost:5000/api/products');
+      setProducts(response.data);
     } catch (error) {
-      console.error("Gagal ambil data:", error)
+      console.error("Gagal ambil data:", error);
     }
-  }
+  };
 
-  useEffect(() => { fetchProducts() }, [])
+  useEffect(() => { 
+    // Hanya fetch data kalau sudah login (punya token)
+    if (token) {
+      fetchProducts(); 
+    }
+  }, [token]);
 
   const addToCart = (product) => {
     setCart((prev) => {
-      const isExist = prev.find((item) => item.id === product.id)
+      const isExist = prev.find((item) => item.id === product.id);
       if (isExist) {
         return prev.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
+        );
       }
-      return [...prev, { ...product, quantity: 1 }]
-    })
-  }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
 
   const handleCheckout = async () => {
     try {
-      const items = cart.map(item => ({ productId: item.id, quantity: item.quantity }))
-      await axios.post('http://localhost:5000/api/transactions', { items })
-      alert("Pembayaran Berhasil! Stok telah diperbarui.")
-      setCart([])
-      fetchProducts()
+      const items = cart.map(item => ({ productId: item.id, quantity: item.quantity }));
+      await axios.post('http://localhost:5000/api/transactions', { items });
+      alert("Pembayaran Berhasil! Stok telah diperbarui.");
+      setCart([]);
+      fetchProducts();
     } catch (error) {
-      alert("Gagal Transaksi")
+      alert("Gagal Transaksi");
     }
+  };
+
+  // Fungsi untuk Logout
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Hapus token dari memori browser
+    setToken(null); // Reset state token
+    setCart([]); // Kosongkan keranjang saat logout
+  };
+
+  const totalHarga = cart.reduce((sum, item) => sum + (item.harga_jual * item.quantity), 0);
+
+  // KUNCI APLIKASI: Jika tidak ada token, tampilkan Halaman Login
+  if (!token) {
+    return <Login setToken={setToken} />;
   }
 
-  const totalHarga = cart.reduce((sum, item) => sum + (item.harga_jual * item.quantity), 0)
-
+  // Jika ada token, tampilkan Aplikasi Kasir (Kode yang kamu kirim tadi)
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-8 font-sans">
       <div className="max-w-6xl mx-auto">
@@ -54,10 +76,19 @@ function App() {
             </h1>
             <p className="text-slate-400">Sistem Management Kasir & Inventori</p>
           </div>
-          <div className="hidden md:block">
+          
+          {/* Bagian Kanan Header (Tombol Logout ditambahkan di sini) */}
+          <div className="hidden md:flex items-center gap-4">
             <span className="bg-blue-900/50 text-blue-300 px-4 py-2 rounded-full border border-blue-800">
               {products.length} Produk Terdaftar
             </span>
+            <button 
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-900/50 hover:bg-red-600 text-red-300 hover:text-white px-4 py-2 rounded-full border border-red-800 transition-colors"
+              title="Keluar dari sistem"
+            >
+              <LogOut size={18} /> Logout
+            </button>
           </div>
         </header>
 
@@ -145,7 +176,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
