@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ShoppingCart, Package, CheckCircle, Trash2, LogOut } from 'lucide-react';
-import Login from './Login'; // Import halaman Login yang baru dibuat
+import { ShoppingCart, Package, CheckCircle, Trash2, LogOut, Settings } from 'lucide-react';
+import Login from './Login';
+import Admin from './Admin'; // INI DIA IMPORT ADMIN YANG BARU
 
 function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  
-  // State untuk menyimpan token login
   const [token, setToken] = useState(localStorage.getItem('token'));
+  
+  // STATE BARU: Untuk mengatur halaman yang sedang dibuka ('kasir' atau 'admin')
+  const [view, setView] = useState('kasir');
 
   const fetchProducts = async () => {
     try {
@@ -20,10 +22,7 @@ function App() {
   };
 
   useEffect(() => { 
-    // Hanya fetch data kalau sudah login (punya token)
-    if (token) {
-      fetchProducts(); 
-    }
+    if (token) fetchProducts(); 
   }, [token]);
 
   const addToCart = (product) => {
@@ -50,25 +49,30 @@ function App() {
     }
   };
 
-  // Fungsi untuk Logout
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Hapus token dari memori browser
-    setToken(null); // Reset state token
-    setCart([]); // Kosongkan keranjang saat logout
+    localStorage.removeItem('token');
+    setToken(null);
+    setCart([]);
+    setView('kasir'); // Kembalikan ke tampilan awal saat logout
   };
 
   const totalHarga = cart.reduce((sum, item) => sum + (item.harga_jual * item.quantity), 0);
 
-  // KUNCI APLIKASI: Jika tidak ada token, tampilkan Halaman Login
+  // KUNCI APLIKASI
   if (!token) {
     return <Login setToken={setToken} />;
   }
 
-  // Jika ada token, tampilkan Aplikasi Kasir (Kode yang kamu kirim tadi)
+  // SAKLAR HALAMAN: Jika state view adalah 'admin', tampilkan halaman Admin
+  if (view === 'admin') {
+    return <Admin setView={setView} />;
+  }
+
+  // Jika state view adalah 'kasir', tampilkan aplikasi kasir utama
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-8 font-sans">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header Kasir */}
         <header className="flex justify-between items-center mb-10 bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
           <div>
             <h1 className="text-3xl font-extrabold text-blue-400 flex items-center gap-3">
@@ -77,21 +81,31 @@ function App() {
             <p className="text-slate-400">Sistem Management Kasir & Inventori</p>
           </div>
           
-          {/* Bagian Kanan Header (Tombol Logout ditambahkan di sini) */}
           <div className="hidden md:flex items-center gap-4">
-            <span className="bg-blue-900/50 text-blue-300 px-4 py-2 rounded-full border border-blue-800">
-              {products.length} Produk Terdaftar
+            <span className="bg-blue-900/50 text-blue-300 px-4 py-2 rounded-full border border-blue-800 font-medium">
+              {products.length} Produk
             </span>
+            
+            {/* TOMBOL BARU: Untuk pindah ke halaman Admin */}
+            <button 
+              onClick={() => setView('admin')}
+              className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-full border border-slate-600 transition-colors"
+              title="Kelola Produk"
+            >
+              <Settings size={18} /> Mode Admin
+            </button>
+
             <button 
               onClick={handleLogout}
               className="flex items-center gap-2 bg-red-900/50 hover:bg-red-600 text-red-300 hover:text-white px-4 py-2 rounded-full border border-red-800 transition-colors"
               title="Keluar dari sistem"
             >
-              <LogOut size={18} /> Logout
+              <LogOut size={18} />
             </button>
           </div>
         </header>
 
+        {/* Kolom Produk & Keranjang */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Kolom Produk */}
           <div className="lg:col-span-2">
