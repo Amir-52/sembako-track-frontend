@@ -50,7 +50,7 @@ export default function Login({ setToken }) {
             <Store size={36} className="text-white" />
           </div>
           <h1 className="text-2xl font-black tracking-tight text-white uppercase">
-            {isRegister ? 'Daftar Akun' : 'Sembako-Track'}
+            {isRegister ? 'Daftar Akun' : 'Kasir Berkah Sembako'}
           </h1>
           <p className="text-slate-400 text-sm mt-1 font-medium">
             {isRegister ? 'Buat akun admin pertama kamu' : 'Silakan login untuk mengakses kasir'}

@@ -92,7 +92,7 @@ function App() {
             </div>
             <div>
               <h1 className="text-2xl font-black tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                SEMBAKO-TRACK
+                KASIR BERKAH SEMBAKO
               </h1>
               <p className="text-slate-500 text-sm font-medium">Professional POS System v2.1</p>
             </div>
