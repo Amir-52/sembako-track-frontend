@@ -100,8 +100,8 @@ export default function Login({ setToken }) {
             {loading ? 'Memproses...' : (isRegister ? <><UserPlus size={18}/> Buat Akun</> : <><ArrowRight size={18}/> Masuk</>)}
           </button>
         </form>
-
-        <div className="mt-8 text-center">
+          {/* Memberi komentar pada bagian toggle register di bawah ini */}
+        {/*<div className="mt-8 text-center">
           <button 
             type="button"
             onClick={() => setIsRegister(!isRegister)}
@@ -109,7 +109,7 @@ export default function Login({ setToken }) {
           >
             {isRegister ? 'Sudah punya akun? Login di sini' : 'Belum punya akun? Daftar sekarang'}
           </button>
-        </div>
+        </div>*/}
       </div>
     </div>
   );
