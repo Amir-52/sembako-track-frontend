@@ -15,7 +15,7 @@ function Admin({ setView }) {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/products');
+      const response = await axios.get('https://sembako-track-backend-production.up.railway.app/api/products');
       setProducts(response.data);
     } catch (error) {
       console.error("Gagal ambil data:", error);
@@ -46,10 +46,10 @@ function Admin({ setView }) {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.patch(`http://localhost:5000/api/products/${editingId}`, formData);
+        await axios.patch(`https://sembako-track-backend-production.up.railway.app/api/products/${editingId}`, formData);
         alert("Produk berhasil diupdate!");
       } else {
-        await axios.post('http://localhost:5000/api/products', formData);
+        await axios.post('https://sembako-track-backend-production.up.railway.app/api/products', formData);
         alert("Produk baru berhasil ditambahkan!");
       }
       setIsFormOpen(false);
@@ -63,7 +63,7 @@ function Admin({ setView }) {
   const handleDelete = async (id, nama) => {
     if (window.confirm(`Yakin ingin menghapus ${nama} dari etalase?`)) {
       try {
-        await axios.delete(`http://localhost:5000/api/products/${id}`);
+        await axios.delete(`https://sembako-track-backend-production.up.railway.app/api/products/${id}`);
         fetchProducts(); 
       } catch (error) {
         alert("Gagal menghapus produk!");

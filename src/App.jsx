@@ -17,7 +17,7 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/products');
+      const response = await axios.get('https://sembako-track-backend-production.up.railway.app/api/products');
       setProducts(response.data);
     } catch (error) {
       console.error("Gagal ambil data:", error);
@@ -43,7 +43,7 @@ function App() {
   const handleCheckout = async () => {
     try {
       const items = cart.map(item => ({ productId: item.id, quantity: item.quantity }));
-      await axios.post('http://localhost:5000/api/transactions', { items });
+      await axios.post('https://sembako-track-backend-production.up.railway.app/api/transactions', { items });
       
       setReceiptData({
         items: [...cart],
