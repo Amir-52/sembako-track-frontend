@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Store, Lock, User, ArrowRight, UserPlus } from 'lucide-react';
+import appIcon from './assets/app-icon.png'; 
 
 export default function Login({ setToken }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -46,8 +47,13 @@ export default function Login({ setToken }) {
 
       <div className="bg-slate-800/40 backdrop-blur-xl p-8 md:p-10 rounded-[2rem] border border-white/5 shadow-2xl shadow-black/50 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-flex p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/20 mb-4">
+          {/* icon lama */}
+          {/* <div className="inline-flex p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/20 mb-4">
             <Store size={36} className="text-white" />
+          </div> */}
+          {/* icon baru */}
+          <div className="mb-6 flex justify-center">
+            <img src={appIcon} alt="Kasir Berkah Logo" className="w-20 h-20 drop-shadow-lg" />
           </div>
           <h1 className="text-2xl font-black tracking-tight text-white uppercase">
             {isRegister ? 'Daftar Akun' : 'Kasir Berkah Sembako'}
