@@ -15,7 +15,8 @@ export default function Login({ setToken }) {
     
     // GANTI SESUAI ROUTE BACKEND KAMU (Misal: /api/auth/register atau /api/users/register)
     const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
-    const url = `https://sembako-track-backend-production.up.railway.app${endpoint}`;
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const url = `${API_URL}${endpoint}`;
 
     try {
       const response = await axios.post(url, { username, password });
